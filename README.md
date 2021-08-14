@@ -14,24 +14,26 @@ The heart of the computer system is the RX 8 Lepton CPU, which is based on an ow
 - and a very simple MMU
 
 ## Interrupts
-The interrupt controller has 16 module interrupts (one for each module) 12 special hardware interrupts (one is used for user mode violation and a second is the timer interrupt) and 4 interrupts which are reserved for software. The priorization of the interrupts is handled with some sort of "daisy chain". Software fired interrupts have the highest priority (will be changed when i fix the timing). The next in the list are the modules with the highest priority to module 0. Then comes the user mode violation interrupt, the 10 free special hardware interrupts and the timer interrupt. Theoretical the 4 software reserved interrupts would have the lowest priority but because they are only manuel activated they have actually the highest priority.
+The interrupt controller has 16 module interrupts (one for each module) 12 special hardware interrupts (one is used for user mode violation and a second is the timer interrupt) and 4 interrupts which are reserved for software. The priorization of the interrupts is handled with some sort of "daisy chain". Software fired interrupts have the highest priority. The next in the list are the modules with the highest priority to module 0. Then comes the user mode violation interrupt, the 10 free special hardware interrupts and the timer interrupt. Theoretical the 4 software reserved interrupts would have the lowest priority but because they are only manual activated they have actually the highest priority.
 
 ## Multitasking and the not-64KByte-RAM
-The CPU can directly address 64KByte ROM and 64KByte RAM. Not more! But thanks to the MMU it's possible to cheat a little bit and extend the range to 16MByte ROM and 16MByte RAM. All TLB-entries in the MMU are 16Bit width and are set with the 2 pointer register. The page size or offset part is fixed to 256Byte (8Bit). With that it can address 24Bit addresses. That means 256 processes could (only) theoretically work isolated from each other in it's own 64KByte address space. With some software tinkering you could even use the MMU as "additional 8Bit pointer register" to make all 16MByte available to one process. The interrupt controller has an timer interrupt, which can be set and activated in kernel mode. The timer fires an interrupt if the counter reaches an reference value (which can be set in kernel mode too). The timer counter counts + 1 every instruction (not clock signal) and can be reset by switching it off in the CPU mode register. Some addition: the MMU is NOT automized and all entries must be set directly by the programmer.
+The CPU can directly address 64KByte ROM and 64KByte RAM. Not more! But thanks to the MMU it's possible to cheat a little bit and extend the range to 16MByte ROM and 16MByte RAM. All TLB-entries in the MMU are 16Bit width and are set with the 2 pointer register. The page size or offset part is fixed to 256Byte (8Bit). With that it can address 24Bit addresses. That means 256 processes could (only) theoretically work isolated from each other in it's own 64KByte address space. With some software tinkering you could even use the MMU as "additional 8Bit pointer register" to make all 16MByte available to one process.
+
+The interrupt controller has an timer interrupt, which can be set and activated in kernel mode. The timer fires an interrupt if the counter reaches an reference value (which can be set in kernel mode too). The timer counter counts + 1 every instruction (not clock signal) and can be reset by switching it off in the CPU mode register. Some addition: the MMU is NOT automized and all entries must be set directly by the programmer.
 
 ## Bus and Modules
-The CPU can handle a simple bus system for I/O. The CPU can send values to up to 16 different modules. For that it uses the pointer as data source and a register for module addressing. To recieve data from a module the module has to trigger an interrupt and send the (16Bit) value to the CPU. The bus and it's modules are not able to handle DMA. Atm. 3 modules are build and functional:
+The CPU can handle a simple bus system for I/O. The CPU can send values to up to 16 different modules. For that it uses the pointer as data source and a register for module addressing. To recieve data from a module it has to trigger an interrupt and send the (16Bit) value to the CPU. The bus and it's modules are not able to handle DMA. Atm. 3 modules are build and functional:
 - A keyboard module with address 0 (read only)
 - A terminal module with address 2 (write only)
-- A crude IDE-like controller with address 4 (read and write, it can't be used as program memory)
+- A crude IDE-like Not-an-IDE-controller with address 4 (read and write, it can't be used as program memory)
 
 ## Handbook
-Since it would take a whole handbook to understand the computer i wrote one with detailed informations about the computer, ISA references, modules (and how to build some more) and a whole programming tutorial. It's in the repository and named HowToERS3864K (coming soon)
+Since it would take a whole handbook to understand the computer i wrote one with detailed informations about the computer, ISA references, modules (and a simple description what new modules need to do to become functional and compatible) and a whole programming tutorial. It's in the repository and named HowToERS3864K.
 
 ## Known problems and bugs
 1. Some module interrupts are send to the shadow realm (rare but yeah)
 2. The internal timing is oof (the system works anyway)
+3. The overflow flag of the ALU is not trustworthy
 
-## Future plans (sorted by priority)
-1. Clean up the internals and fixing the timings
-2. Adjustments to the ISA
+## Future
+The ERS3864K is just a tech demonstrator for my future neumann-like CPUs and as such will not be futher developed. I will try to fix as many function breaking bugs as possible and finishing the handbook but not more.
