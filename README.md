@@ -28,9 +28,12 @@ The CPU can handle a simple bus system for I/O. The CPU can send values to up to
 - A crude IDE-like Not-an-IDE-controller with address 4 (read and write, it can't be used as program memory)
 
 ## Handbook
-Since it would take a whole handbook to understand the computer i wrote one with detailed informations about the computer, ISA references, modules (and a simple description what new modules need to solve to become functional and compatible) and a whole programming tutorial. It's in the repository and named HowToERS3864K.
+Since it would take a whole handbook to understand the computer i wrote one with detailed informations about the computer, ISA references, modules (and a simple description what new modules need to do to become functional and compatible) and a whole programming tutorial. It's in the repository and named HowToERS3864K.
 
 ## Known problems and bugs
 1. Some module interrupts are send to the shadow realm (rare but yeah)
 2. The internal timing is oof (the system works anyway)
 3. The overflow flag of the ALU is not trustworthy
+
+## Future
+The ERS3864K is just a tech demonstrator for my future neumann-like CPUs and as such will not be futher developed. I will try to fix as many function breaking bugs as possible and finishing the handbook but not more.
